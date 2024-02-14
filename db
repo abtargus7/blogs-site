@@ -1,0 +1,17 @@
+db.products.insert({id: 4,
+     name: "sharpner", 
+     price: 0.60, 
+     stock: 50,
+    reviews : [
+        {
+            customer_name: "Shaw",
+            review: "nice sharpner",
+            rating: 3
+        },
+        {
+            customer_name: "rohit",
+            review: "good sharpner",
+            rating: 4
+        }
+    ]
+    })

@@ -1,0 +1,16 @@
+<%- include('header.ejs') -%>
+
+<h1> <%= titleHome %></h1>
+<p> <%= homeContent %></p>
+<% addBlog.forEach(function(blog){ %>
+    <div class="card">
+        <h4><%= blog.title %></h4>
+        <p><%= blog.content.substring(0,100).concat(' ...') %> <a href="/posts/<%= blog.title %>">Read more</a></p>
+        <form action="/post" method="POST">
+            <button type="submit" name="read_more" value=<%= blog.title.replaceAll(' ','') %>>Read More</button>
+        </form>
+    </div>
+<% }) %>
+
+
+<%- include('footer.ejs') -%>
