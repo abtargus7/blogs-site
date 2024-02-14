@@ -18,7 +18,7 @@ main().catch(err=>
 
 async function main(){
 
-  await mongoose.connect("mongodb://localhost:27017/BlogsDB");
+  await mongoose.connect("mongodb://127.0.0.1:27017/BlogsDB");
 
   const blogsSchema = new mongoose.Schema({
     title: String,
@@ -40,17 +40,20 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-const blogsArray = [];
-const blogs = await Blog.find();
+// const blogsArray = [];
+// const blogs = await Blog.find();
 
-  blogs.forEach(function(blog){
-    blogsArray.push(blog);
-  })
+//   blogs.forEach(function(blog){
+//     blogsArray.push(blog);
+//   })
 app.get('/', async function (req, res){
+  const findBlogs = await Blog.find();
+
+
   res.render('home', {
     titleHome : 'Home',
     homeContent: homeStartingContent,
-    addBlog : blogsArray
+    addBlog : findBlogs
   });
 })
 
@@ -67,12 +70,22 @@ app.post('/', function (req, res){
   res.redirect('/');
 })
 
-app.get('/posts/:topic', function (req, res){
+app.get('/posts/:topic', async function (req, res){
   let requestedtitle = _.lowerCase(req.params.topic);
-  // console.log(req.params.topic);
+  // const requestedtitle = req.params.topic;
+  const findBlog = await Blog.find();
+  // console.log(findBlog);
+
+  // res.render('post', {
+  //   blogTitle: findBlog.title,
+  //   blogContent: findBlog.content
+  // });
+
+
+  console.log(req.params.topic);
   let content;
   let title;
-  blogsArray.forEach(function(blog){
+  findBlog.forEach(function(blog){
     if(_.lowerCase(blog.title) === requestedtitle){
       content = blog.content;
       title = blog.title;
@@ -85,6 +98,9 @@ app.get('/posts/:topic', function (req, res){
   })
 })
 
+app.post('/post', function(req, res){
+  console.log(req.body);
+})
 // app.post('/post', function (req, res) {
 //   // console.log(req.body.read_more);
 //   const inTitle = req.body.read_more;
@@ -129,9 +145,7 @@ app.post('/compose', function(req, res){
   console.log(req.body);
 })
 
-
 }
-
 app.listen(3000, function() {
   console.log("Server started on port 3000");
 });
